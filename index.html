@@ -3,233 +3,208 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Financial Life Planner 🌸</title>
+    <title>Financial Buddy: The Master Game 🎮</title>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
-        /* --- Palette สีจากรูปภาพ --- */
         :root {
-            --color-red: #BB240A;        /* Vermelho Vívido */
-            --color-blue: #322470;       /* Azul */
-            --color-sand: #E5DBD1;       /* Areia Clara (พื้นหลัง) */
-            --color-yellow: #EDCC4D;     /* Amarelo */
-            --color-coffee: #623F1B;     /* Café Torrado (ตัวอักษร) */
-            --white: #ffffff;
+            --color-red: #BB240A; --color-blue: #322470; --color-sand: #E5DBD1; 
+            --color-yellow: #EDCC4D; --color-coffee: #623F1B; --white: #ffffff;
+            --color-green: #2ecc71;
         }
-
         * { box-sizing: border-box; font-family: 'Sarabun', sans-serif; color: var(--color-coffee); }
-        body { background-color: var(--color-sand); display: flex; justify-content: center; padding: 20px; margin: 0; }
+        body { background-color: var(--color-sand); display: flex; justify-content: center; padding: 15px; margin: 0; }
+        .app-container { width: 100%; max-width: 450px; background: var(--white); border-radius: 40px; padding: 25px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
 
-        .app-container { width: 100%; max-width: 480px; background: var(--white); border-radius: 40px; padding: 25px; box-shadow: 0 20px 40px rgba(0,0,0,0.08); position: relative; overflow: hidden;}
-        
-        /* StatusBar Simulation */
-        .status-bar { display: flex; justify-content: space-between; padding: 0 10px; font-size: 14px; font-weight: bold; margin-bottom: 15px; }
+        /* Game & Header Area */
+        .header { text-align: center; margin-bottom: 15px; position: relative; background: #fdfaf6; padding: 15px; border-radius: 25px; border: 1px solid #eee; }
+        .btn-settings { position: absolute; top: 10px; right: 15px; background: none; border: none; cursor: pointer; font-size: 20px; }
+        #mascot { font-size: 50px; display: block; margin-bottom: 5px; }
+        .level-badge { display: inline-block; background: var(--color-blue); color: white; padding: 2px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; }
+        .xp-container { width: 100%; background: #eee; height: 6px; border-radius: 10px; margin-top: 10px; overflow: hidden; }
+        #xp-bar { width: 0%; height: 100%; background: var(--color-green); transition: 0.5s; }
 
-        /* --- Header & Top Card --- */
-        header { text-align: center; margin-bottom: 15px; }
-        header p { margin: 0; font-size: 14px; opacity: 0.8; }
-        
-        .main-amount-card { 
-            background-color: var(--color-red); 
-            border-radius: 30px; 
-            padding: 30px; 
-            text-align: center; 
-            color: var(--white);
-            box-shadow: 0 10px 20px rgba(187, 36, 10, 0.2);
-            margin-bottom: 15px;
+        /* Calendar & Legend */
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; margin: 15px 0 5px 0; }
+        .cal-date { 
+            aspect-ratio: 1/1.2; border-radius: 10px; background: #f9f9f9; 
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            font-size: 11px; font-weight: bold; border: 1px solid #eee;
         }
-        .main-amount-card * { color: var(--white); }
-        .main-amount-card small { font-size: 16px; font-weight: 300; }
-        .main-amount-card .amount { font-size: 64px; font-weight: bold; margin: 5px 0; line-height: 1; }
-        .main-amount-card .unit { font-size: 18px; }
-
-        /* --- Summary Cards Grid --- */
-        .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
-        .mini-card { background: #F8F9FA; border-radius: 20px; padding: 15px; text-align: center; border: 1px solid #eee;}
-        .mini-card small { font-size: 12px; color: #999; display: block; margin-bottom: 5px;}
-        .mini-card b { font-size: 20px; color: var(--color-coffee); }
-
-        /* --- Tabs & Forms --- */
-        .tab-container { display: flex; background: #F0F0F0; border-radius: 15px; margin-bottom: 15px; padding: 4px;}
-        .tab { flex: 1; border: none; padding: 12px; cursor: pointer; background: none; border-radius: 12px; font-size: 13px; transition: 0.3s; }
-        .tab.active { background: var(--white); font-weight: bold; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-
-        input { width: 100%; padding: 15px; margin-bottom: 10px; border: 1.5px solid #eee; border-radius: 15px; outline: none; font-size: 16px;}
-        input:focus { border-color: var(--color-yellow); }
+        .day-money { font-size: 8px; color: #999; }
+        .status-good { background-color: #e8f8f0; border-color: var(--color-green); color: var(--color-green); }
+        .status-warning { background-color: #fff9e6; border-color: var(--color-yellow); color: #b7950b; }
+        .status-danger { background-color: #fceae8; border-color: var(--color-red); color: var(--color-red); }
         
-        .btn-main { width: 100%; background-color: var(--color-yellow); border: none; padding: 18px; border-radius: 15px; color: var(--color-coffee); font-weight: bold; font-size: 16px; cursor: pointer; transition: 0.2s; }
-        .btn-main:active { transform: scale(0.98); }
+        .legend { display: flex; justify-content: center; gap: 8px; font-size: 9px; margin-bottom: 15px; }
+        .legend-item { display: flex; align-items: center; gap: 3px; }
+        .dot { width: 7px; height: 7px; border-radius: 50%; }
 
-        /* --- List Items --- */
-        .list-container { margin-top: 15px; margin-bottom: 20px; }
-        ul { list-style: none; padding: 0; margin: 0; }
-        li { background: var(--white); padding: 15px; border-radius: 18px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #f8f8f8; }
-        li span { font-size: 15px; }
-        li b { font-size: 16px; }
+        /* Finance Display */
+        .main-card { background: var(--color-blue); border-radius: 30px; padding: 20px; text-align: center; color: white; margin-bottom: 15px; }
+        .main-card * { color: white; }
+        .amount { font-size: 44px; font-weight: bold; }
         
-        .btn-del { background: #FFEBEE; color: var(--color-red); border: none; padding: 8px 15px; border-radius: 12px; cursor: pointer; font-size: 12px; font-weight: bold;}
+        .stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+        .stat-box { background: #f9f9f9; padding: 10px; border-radius: 15px; text-align: center; border: 1px solid #eee; font-size: 13px; }
 
-        /* --- Monthly Report --- */
-        .monthly-report-card { 
-            background-color: var(--white); 
-            border: 2px dashed #FFCDD2; 
-            border-radius: 20px; 
-            padding: 20px; 
-            margin-bottom: 20px; 
-            font-size: 14px;
-        }
-        .report-header { display: flex; align-items: center; font-weight: bold; margin-bottom: 10px; }
-        .report-header img { width: 20px; margin-right: 10px; }
-
-        /* Utility */
-        .reset-link { text-align: center; font-size: 12px; color: #ccc; text-decoration: underline; cursor: pointer; margin-top: 20px; display: block;}
+        /* Input & Items */
+        .input-group { display: flex; gap: 5px; margin-bottom: 15px; }
+        input { flex: 1; padding: 12px; border-radius: 12px; border: 1px solid #ddd; outline: none; font-size: 14px; }
+        .btn-add { background: var(--color-blue); color: white; border: none; padding: 0 15px; border-radius: 12px; cursor: pointer; font-weight: bold; }
         
+        .item-list { list-style: none; padding: 0; }
+        li { background: #fff; border: 1px solid #eee; padding: 12px; border-radius: 15px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+        .btn-pay { background: var(--color-green); color: white; border: none; padding: 6px 12px; border-radius: 8px; font-size: 11px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="app-container">
-    <div class="status-bar">
-        <span>12:26 📱</span>
-        <span>📶 🔋 62</span>
+    <div class="header">
+        <button class="btn-settings" onclick="editIncome()">⚙️</button>
+        <span id="mascot">😊</span>
+        <div class="level-badge">LV. <span id="lv-val">1</span> <span id="rank-name">นักออมฝึกหัด</span></div>
+        <div class="xp-container"><div id="xp-bar"></div></div>
     </div>
 
-    <header>
-        <div class="main-amount-card">
-            <small>งบกินอยู่ "ห้ามเกิน" วันนี้</small>
-            <div id="daily-available" class="amount">112</div>
-            <div class="unit">บาท</div>
-        </div>
-    </header>
-
-    <div class="summary-grid">
-        <div class="mini-card">
-            <small>หนี้ที่ต้องกันไว้</small>
-            <b id="weekly-debt">890 ฿</b>
-        </div>
-        <div class="mini-card">
-            <small>ต้องออมวันนี้</small>
-            <b id="total-saving">60 ฿</b>
-        </div>
+    <div id="calendar-grid" class="calendar-grid"></div>
+    <div class="legend">
+        <div class="legend-item"><div class="dot" style="background:var(--color-green)"></div> วินัยดี</div>
+        <div class="legend-item"><div class="dot" style="background:var(--color-yellow)"></div> เริ่มตึง</div>
+        <div class="legend-item"><div class="dot" style="background:var(--color-red)"></div> อันตราย</div>
     </div>
 
-    <div class="tab-container">
-        <button class="tab active" onclick="switchTab('debt')">หนี้สัปดาห์หน้า</button>
-        <button class="tab" onclick="switchTab('goal')">กองเงินสะสม</button>
-        <button class="tab" onclick="switchTab('note')">บันทึก/คนยืม</button>
+    <div class="main-card">
+        <small>งบกินใช้รายวัน (หลังหักหนี้สัปดาห์นี้)</small>
+        <div id="daily-available" class="amount">0</div>
+        <button onclick="saveToday()" style="margin-top:10px; border:none; background:rgba(255,255,255,0.2); color:white; border-radius:10px; padding:6px 15px; cursor:pointer; font-size:12px;">💾 บันทึกสถิติวินัยวันนี้</button>
     </div>
 
-    <div id="standard-form">
-        <input type="text" id="item-desc" placeholder="เช่น ค่าเน็ต, เก็บซื้อชุด">
-        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 10px;">
-            <input type="number" id="item-amount" placeholder="จำนวนเงิน">
-            <input type="number" id="item-days" placeholder="กี่วัน" style="display:none;">
-        </div>
-        <button onclick="addNewItem()" class="btn-main">เพิ่มรายการ</button>
+    <div class="stats-row">
+        <div class="stat-box"><small>หนี้ที่ยังไม่จ่าย</small><br><b id="sum-debt">0</b> ฿</div>
+        <div class="stat-box"><small>ประมาณเงินเหลือสิ้นเดือน</small><br><b id="monthly-est">0</b> ฿</div>
     </div>
 
-    <div class="list-container">
-        <ul id="display-list">
-            <li><span>ค่าเน็ต</span> <b>500 ฿</b> <button class="btn-del">ลบ</button></li>
-            <li><span>ค่าของ</span> <b>390 ฿</b> <button class="btn-del">ลบ</button></li>
-        </ul>
+    <div class="input-group">
+        <input type="text" id="desc" placeholder="เช่น หนี้ 500">
+        <input type="number" id="amt" placeholder="บาท">
+        <button class="btn-add" onclick="addItem()">เพิ่ม</button>
     </div>
 
-    <div class="monthly-report-card">
-        <div class="report-header">
-            📊 ประมาณการรายเดือน
-        </div>
-        <div id="monthly-report-text">
-            รายรับ: 9,000 | คงเหลือสุทธิ: 3,385.714 ฿
-        </div>
-    </div>
-    
-    <span class="reset-link" onclick="clearData()">เริ่มใหม่ทั้งหมด</span>
+    <ul id="item-list" class="item-list"></ul>
 </div>
 
 <script>
-    // --- JavaScript Logic (คงเดิมจากเวอร์ชัน Ultimate เพื่อความถูกต้องของการคำนวณ) ---
-    let debts = JSON.parse(localStorage.getItem('debts')) || [];
-    let goals = JSON.parse(localStorage.getItem('goals')) || [];
-    let activeTab = 'debt';
+    // Initial State
+    let state = JSON.parse(localStorage.getItem('fin_master_db')) || {
+        dailyIncome: 300,
+        items: [],
+        history: {},
+        xp: 0,
+        lv: 1
+    };
 
-    function switchTab(tab) {
-        activeTab = tab;
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        document.querySelector(`[onclick="switchTab('${tab}')"]`).classList.add('active');
-        document.getElementById('item-days').style.display = tab === 'goal' ? 'block' : 'none';
-        renderAll();
-    }
-
-    function calculateAll() {
-        // สมมติรายรับรายวันตามตัวอย่างรูปภาพคือ 300 บาท (9,000 / 30)
-        const income = 300; 
-        const saveRate = 10; // ออม 10%
-
-        const totalDebt = debts.reduce((s, i) => s + i.amount, 0);
-        const dailyDebtPart = totalDebt / 7;
-        const dailyGoalPart = goals.reduce((s, i) => s + (i.amount / i.days), 0);
-        const basicSaving = income * (saveRate / 100);
-
-        const available = income - dailyDebtPart - dailyGoalPart - basicSaving;
-
-        // อัปเดตหน้าจอ
-        document.getElementById('daily-available').innerText = Math.floor(available).toLocaleString();
-        document.getElementById('weekly-debt').innerText = totalDebt.toLocaleString() + " ฿";
-        document.getElementById('total-saving').innerText = Math.floor(dailyGoalPart + basicSaving).toLocaleString() + " ฿";
-
-        // สรุปรายเดือน
-        const mIncome = income * 30;
-        const mExp = (dailyDebtPart + dailyGoalPart + basicSaving) * 30;
-        document.getElementById('monthly-report-text').innerText = `รายรับ: ${mIncome.toLocaleString()} | คงเหลือสุทธิ: ${(mIncome - mExp).toLocaleString()} ฿`;
-    }
-
-    function addNewItem() {
-        const desc = document.getElementById('item-desc').value;
-        const amount = parseFloat(document.getElementById('item-amount').value);
-        const days = parseInt(document.getElementById('item-days').value) || 7;
-
-        if (!desc || !amount) return alert("กรอกข้อมูลให้ครบก่อนนะจ๊ะ");
-
-        if (activeTab === 'debt') debts.push({ desc, amount, id: Date.now() });
-        else if (activeTab === 'goal') goals.push({ desc, amount, days, id: Date.now() });
-
-        saveData();
-        document.getElementById('item-desc').value = '';
-        document.getElementById('item-amount').value = '';
-        document.getElementById('item-days').value = '';
-    }
-
-    function deleteItem(id, type) {
-        if (type === 'debt') debts = debts.filter(i => i.id !== id);
-        else if (type === 'goal') goals = goals.filter(i => i.id !== id);
-        saveData();
-    }
-
-    function saveData() {
-        localStorage.setItem('debts', JSON.stringify(debts));
-        localStorage.setItem('goals', JSON.stringify(goals));
-        renderAll();
-    }
-
-    function renderAll() {
-        const list = document.getElementById('display-list');
-        list.innerHTML = "";
+    function calculate() {
+        const pendingItems = state.items.filter(i => !i.isPaid);
+        const totalPending = pendingItems.reduce((s, i) => s + i.amount, 0);
         
-        if (activeTab === 'debt') {
-            debts.forEach(i => list.innerHTML += `<li><span>${i.desc}</span> <b>${i.amount} ฿</b> <button class="btn-del" onclick="deleteItem(${i.id},'debt')">ลบ</button></li>`);
-        } else if (activeTab === 'goal') {
-            goals.forEach(i => list.innerHTML += `<li><span>${i.desc}</span> <b>${i.amount} ฿</b> <button class="btn-del" onclick="deleteItem(${i.id},'goal')">ลบ</button></li>`);
-        } else if (activeTab === 'note') {
-            list.innerHTML = "<li><span>(ฟังก์ชันโน้ตยังไม่ได้รวมในหน้านี้)</span></li>";
-        }
-        calculateAll();
+        // Logic: หนี้รายสัปดาห์หาร 7 เพื่อหักจากงบรายวัน
+        const dailyAvailable = state.dailyIncome - (totalPending / 7);
+        const monthlyEst = (state.dailyIncome * 30) - totalPending;
+
+        // UI Update
+        document.getElementById('daily-available').innerText = Math.floor(dailyAvailable).toLocaleString();
+        document.getElementById('sum-debt').innerText = totalPending.toLocaleString();
+        document.getElementById('monthly-est').innerText = Math.floor(monthlyEst).toLocaleString();
+        document.getElementById('lv-val').innerText = state.lv;
+        document.getElementById('xp-bar').style.width = state.xp + "%";
+        
+        // Mascot Reaction
+        const m = document.getElementById('mascot');
+        if(dailyAvailable > 150) m.innerText = "😊";
+        else if(dailyAvailable > 50) m.innerText = "😐";
+        else m.innerText = "😫";
+
+        render();
     }
 
-    function clearData() { if(confirm("ล้างข้อมูลทั้งหมด?")) { localStorage.clear(); location.reload(); } }
+    function addXP(val) {
+        state.xp += val;
+        if(state.xp >= 100) {
+            state.lv += 1;
+            state.xp = 0;
+            alert("✨ LEVEL UP! คุณเป็นเลเวล " + state.lv + " แล้ว!");
+        }
+        save();
+    }
 
-    // Initialize
-    renderAll();
+    function addItem() {
+        const desc = document.getElementById('desc').value;
+        const amount = parseFloat(document.getElementById('amt').value);
+        if(desc && amount) {
+            state.items.push({ id: Date.now(), desc, amount, isPaid: false });
+            save();
+        }
+    }
+
+    function markAsPaid(id) {
+        const item = state.items.find(i => i.id === id);
+        if(item) {
+            item.isPaid = true;
+            addXP(25); // ได้ XP เมื่อเคลียร์หนี้
+        }
+    }
+
+    function saveToday() {
+        const today = new Date().toISOString().split('T')[0];
+        const current = parseInt(document.getElementById('daily-available').innerText);
+        state.history[today] = current;
+        addXP(10); // ได้ XP เมื่อบันทึกวินัย
+        alert("บันทึกวินัยสำเร็จ! +10 XP");
+    }
+
+    function editIncome() {
+        const val = prompt("แก้ไขรายรับต่อวันพื้นฐานของคุณ:", state.dailyIncome);
+        if(val) { state.dailyIncome = parseFloat(val); save(); }
+    }
+
+    function save() {
+        localStorage.setItem('fin_master_db', JSON.stringify(state));
+        calculate();
+    }
+
+    function render() {
+        // Calendar Grid
+        const grid = document.getElementById('calendar-grid');
+        grid.innerHTML = "";
+        const now = new Date();
+        for(let i=0; i<7; i++) {
+            const d = new Date(); d.setDate(now.getDate() - (6-i));
+            const key = d.toISOString().split('T')[0];
+            const val = state.history[key];
+            let status = "";
+            if(val !== undefined) {
+                if(val > 150) status = "status-good";
+                else if(val > 50) status = "status-warning";
+                else status = "status-danger";
+            }
+            grid.innerHTML += `<div class="cal-date ${status}">${d.getDate()}<span class="day-money">${val || '-'}</span></div>`;
+        }
+
+        // Debt List (แสดงเฉพาะที่ยังไม่จ่าย)
+        const list = document.getElementById('item-list');
+        list.innerHTML = "";
+        state.items.filter(i => !i.isPaid).forEach(i => {
+            list.innerHTML += `<li>
+                <span>${i.desc} (<b>${i.amount.toLocaleString()}</b>)</span>
+                <button class="btn-pay" onclick="markAsPaid(${i.id})">✔️ จ่ายแล้ว</button>
+            </li>`;
+        });
+        document.getElementById('desc').value = "";
+        document.getElementById('amt').value = "";
+    }
+
+    calculate();
 </script>
-
 </body>
 </html>
