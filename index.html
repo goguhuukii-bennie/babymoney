@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cute Money Planner 🌸</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #FFB7B2; /* ชมพูพาสเทล */
+            --secondary: #B2E2F2; /* ฟ้าพาสเทล */
+            --accent: #FFDAC1; /* ส้มอ่อน */
+            --bg: #FDFCF0;
+            --text: #5D5D5D;
+            --white: #ffffff;
+        }
+
+        * { box-sizing: border-box; font-family: 'Sarabun', sans-serif; }
+        body { background-color: var(--bg); color: var(--text); display: flex; justify-content: center; padding: 20px; margin: 0; }
+
+        .app-container { width: 100%; max-width: 450px; background: var(--white); border-radius: 30px; padding: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+
+        header { text-align: center; margin-bottom: 20px; }
+        header h1 { color: #FF9AA2; margin: 0; font-size: 24px; }
+        header p { font-size: 14px; color: #aaa; margin: 5px 0 0 0; }
+
+        .card { background: #fff; border-radius: 20px; padding: 15px; margin-bottom: 15px; border: 1px solid #f0f0f0; }
+        
+        /* Dashboard สรุปเงินที่ใช้ได้ */
+        .main-card { 
+            background: linear-gradient(135deg, #FFB7B2, #FF9AA2); 
+            color: white; padding: 25px; border-radius: 25px; 
+            text-align: center; margin-bottom: 15px; 
+            box-shadow: 0 8px 15px rgba(255, 183, 178, 0.4); 
+        }
+        .main-card small { font-size: 14px; opacity: 0.9; }
+        .amount { font-size: 48px; font-weight: bold; margin: 5px 0; }
+        
+        .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+        .sub-card { background: #F8F9FA; padding: 12px; border-radius: 15px; text-align: center; }
+        .sub-card small { font-size: 11px; color: #999; }
+        .sub-card div { font-weight: bold; font-size: 16px; color: var(--text); }
+
+        /* Tabs */
+        .tab-container { display: flex; background: #eee; border-radius: 12px; margin-bottom: 15px; padding: 3px; }
+        .tab { flex: 1; border: none; padding: 10px; cursor: pointer; background: none; border-radius: 10px; font-size: 13px; transition: 0.3s; }
+        .tab.active { background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); color: #FF9AA2; font-weight: bold; }
+
+        /* Inputs */
+        input, textarea { width: 100%; padding: 12px; margin-bottom: 10px; border: 1.5px solid #eee; border-radius: 12px; outline: none; transition: 0.3s; }
+        input:focus { border-color: var(--primary); }
+        .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        
+        .btn-add { width: 100%; background: var(--secondary); border: none; padding: 12px; border-radius: 12px; color: #444; font-weight: bold; cursor: pointer; margin-top: 5px; }
+        .btn-add:hover { opacity: 0.8; }
+
+        /* Lists & Notes */
+        .list-container { margin-top: 10px; }
+        ul { list-style: none; padding: 0; }
+        li { background: #fff; padding: 12px; border-radius: 12px; margin-bottom: 8px; border: 1px solid #f9f9f9; display: flex; justify-content: space-between; align-items: center; font-size: 14px; }
+        .btn-del { background: #FFE4E1; border: none; color: #FF6B6B; border-radius: 8px; padding: 5px 10px; cursor: pointer; font-size: 12px; }
+
+        .note-item { background: #FFF9E3; border-left: 5px solid #FFD1DC; padding: 12px; border-radius: 10px; margin-bottom: 10px; position: relative; }
+        .debtor-tag { background: #FF9AA2; color: white; padding: 2px 8px; border-radius: 20px; font-size: 11px; margin-top: 8px; display: inline-block; }
+
+        .monthly-summary { background: #fdfcf0; border: 2px dashed #FFD1DC; }
+        .btn-clear { background: none; border: none; color: #ccc; cursor: pointer; width: 100%; margin-top: 20px; font-size: 11px; text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <header>
+        <h1>🌸 My Money Life 🌸</h1>
+        <p>บันทึกวันนี้ เพื่อเป้าหมายวันหน้า</p>
+    </header>
+
+    <div class="card">
+        <div class="input-row">
+            <div>
+                <label style="font-size: 11px;">รายได้/วัน</label>
+                <input type="number" id="daily-income" value="300" oninput="calculateAll()">
+            </div>
+            <div>
+                <label style="font-size: 11px;">ออม (%)</label>
+                <input type="number" id="save-percent" value="10" oninput="calculateAll()">
+            </div>
+        </div>
+    </div>
+
+    <div class="main-card">
+        <small>งบกินอยู่ "ห้ามเกิน" วันนี้</small>
+        <div id="daily-available" class="amount">0</div>
+        <div style="font-size: 14px;">บาท</div>
+    </div>
+
+    <div class="summary-grid">
+        <div class="sub-card">
+            <small>หนี้ที่ต้องกันไว้</small>
+            <div id="weekly-debt">0</div>
+        </div>
+        <div class="sub-card">
+            <small>ต้องออมวันนี้</small>
+            <div id="total-saving">0</div>
+        </div>
+    </div>
+
+    <div class="tab-container">
+        <button class="tab active" onclick="switchTab('debt')">หนี้สัปดาห์หน้า</button>
+        <button class="tab" onclick="switchTab('goal')">กองเงินสะสม</button>
+        <button class="tab" onclick="switchTab('note')">บันทึก/คนยืม</button>
+    </div>
+
+    <div id="form-container">
+        <div id="standard-form">
+            <input type="text" id="item-desc" placeholder="เช่น ค่าเน็ต, เก็บซื้อชุด">
+            <div class="input-row">
+                <input type="number" id="item-amount" placeholder="จำนวนเงิน">
+                <input type="number" id="item-days" placeholder="กี่วัน (ถ้าออม)" style="display:none;">
+            </div>
+            <button onclick="addNewItem()" class="btn-add">เพิ่มรายการ</button>
+        </div>
+
+        <div id="note-form" style="display:none;">
+            <textarea id="daily-note" placeholder="วันนี้เจออะไรมา..." rows="2"></textarea>
+            <div class="input-row">
+                <input type="text" id="debtor-name" placeholder="ชื่อคนยืม (ถ้ามี)">
+                <input type="number" id="borrow-amount" placeholder="ยอดเงิน">
+            </div>
+            <button onclick="addDailyNote()" class="btn-add" style="background: var(--accent);">จดบันทึก</button>
+        </div>
+    </div>
+
+    <div class="list-container">
+        <ul id="display-list"></ul>
+    </div>
+
+    <div class="card monthly-summary" id="monthly-report"></div>
+    
+    <button class="btn-clear" onclick="clearData()">เริ่มใหม่ทั้งหมด</button>
+</div>
+
+<script>
+    // --- Data Management ---
+    let debts = JSON.parse(localStorage.getItem('debts')) || [];
+    let goals = JSON.parse(localStorage.getItem('goals')) || [];
+    let notes = JSON.parse(localStorage.getItem('notes')) || [];
+    let activeTab = 'debt';
+
+    // --- Tab Switching ---
+    function switchTab(tab) {
+        activeTab = tab;
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelector(`[onclick="switchTab('${tab}')"]`).classList.add('active');
+        
+        document.getElementById('standard-form').style.display = tab === 'note' ? 'none' : 'block';
+        document.getElementById('note-form').style.display = tab === 'note' ? 'block' : 'none';
+        document.getElementById('item-days').style.display = tab === 'goal' ? 'block' : 'none';
+        
+        renderAll();
+    }
+
+    // --- Logic คำนวณ (หัวใจของเว็บ) ---
+    function calculateAll() {
+        const income = parseFloat(document.getElementById('daily-income').value) || 0;
+        const saveRate = parseFloat(document.getElementById('save-percent').value) || 0;
+
+        // 1. เฉลี่ยหนี้ (เตรียมใน 7 วัน)
+        const totalDebt = debts.reduce((s, i) => s + i.amount, 0);
+        const dailyDebtPart = totalDebt / 7;
+
+        // 2. เฉลี่ยเงินออมเป้าหมาย
+        const dailyGoalPart = goals.reduce((s, i) => s + (i.amount / i.days), 0);
+
+        // 3. หักออมพื้นฐาน
+        const basicSaving = income * (saveRate / 100);
+
+        // 4. สรุปเงินใช้ได้จริง
+        const available = income - dailyDebtPart - dailyGoalPart - basicSaving;
+
+        // แสดงผล
+        document.getElementById('daily-available').innerText = Math.floor(available).toLocaleString();
+        document.getElementById('weekly-debt').innerText = totalDebt.toLocaleString() + " ฿";
+        document.getElementById('total-saving').innerText = Math.floor(dailyGoalPart + basicSaving).toLocaleString() + " ฿";
+
+        // สรุปรายเดือน
+        const mIncome = income * 30;
+        const mExp = (dailyDebtPart + dailyGoalPart + basicSaving) * 30;
+        document.getElementById('monthly-report').innerHTML = `
+            <small>📊 ประมาณการรายเดือน</small><br>
+            <b>รายรับ:</b> ${mIncome.toLocaleString()} | <b>คงเหลือสุทธิ:</b> ${(mIncome - mExp).toLocaleString()} ฿
+        `;
+
+        if(available < 100) {
+            document.getElementById('daily-available').style.color = "#FF6B6B";
+        } else {
+            document.getElementById('daily-available').style.color = "white";
+        }
+    }
+
+    // --- Actions ---
+    function addNewItem() {
+        const desc = document.getElementById('item-desc').value;
+        const amount = parseFloat(document.getElementById('item-amount').value);
+        const days = parseInt(document.getElementById('item-days').value) || 7;
+
+        if (!desc || !amount) return alert("กรอกข้อมูลให้ครบก่อนนะจ๊ะ");
+
+        if (activeTab === 'debt') debts.push({ desc, amount, id: Date.now() });
+        else goals.push({ desc, amount, days, id: Date.now() });
+
+        saveData();
+        clearInputs(['item-desc', 'item-amount', 'item-days']);
+    }
+
+    function addDailyNote() {
+        const text = document.getElementById('daily-note').value;
+        const name = document.getElementById('debtor-name').value;
+        const amount = document.getElementById('borrow-amount').value;
+        
+        if (!text && !name) return;
+
+        notes.unshift({ text, name, amount, date: new Date().toLocaleDateString('th-TH'), id: Date.now() });
+        saveData();
+        clearInputs(['daily-note', 'debtor-name', 'borrow-amount']);
+    }
+
+    function deleteItem(id, type) {
+        if (type === 'debt') debts = debts.filter(i => i.id !== id);
+        else if (type === 'goal') goals = goals.filter(i => i.id !== id);
+        else notes = notes.filter(i => i.id !== id);
+        saveData();
+    }
+
+    // --- Helper Functions ---
+    function saveData() {
+        localStorage.setItem('debts', JSON.stringify(debts));
+        localStorage.setItem('goals', JSON.stringify(goals));
+        localStorage.setItem('notes', JSON.stringify(notes));
+        renderAll();
+    }
+
+    function clearInputs(ids) { ids.forEach(id => document.getElementById(id).value = ''); }
+
+    function renderAll() {
+        const list = document.getElementById('display-list');
+        list.innerHTML = "";
+        
+        if (activeTab === 'debt') {
+            debts.forEach(i => list.innerHTML += `<li>${i.desc} <b>${i.amount} ฿</b> <button class="btn-del" onclick="deleteItem(${i.id},'debt')">ลบ</button></li>`);
+        } else if (activeTab === 'goal') {
+            goals.forEach(i => list.innerHTML += `<li>${i.desc} <b>${i.amount} ฿ (${i.days}วัน)</b> <button class="btn-del" onclick="deleteItem(${i.id},'goal')">ลบ</button></li>`);
+        } else {
+            notes.forEach(n => list.innerHTML += `
+                <div class="note-item">
+                    <button class="btn-del" style="float:right" onclick="deleteItem(${n.id},'note')">×</button>
+                    <small>${n.date}</small><br>
+                    ${n.text ? `<div>${n.text}</div>` : ''}
+                    ${n.name ? `<div class="debtor-tag">💸 ${n.name} ยืมไป ${n.amount} ฿</div>` : ''}
+                </div>
+            `);
+        }
+        calculateAll();
+    }
+
+    function clearData() { if(confirm("ล้างข้อมูลทั้งหมด?")) { localStorage.clear(); location.reload(); } }
+
+    // Initialize
+    calculateAll();
+    renderAll();
+</script>
+
+</body>
+</html>
