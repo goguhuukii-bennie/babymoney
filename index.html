@@ -3,249 +3,273 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Financial Buddy: Pastel Dream 🐶🎀</title>
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap" rel="stylesheet">
+    <title>Money Buddy: Ultimate 🐶💎</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg-pastel: #FFF5F7;
-            --card-white: rgba(255, 255, 255, 0.9);
-            --text-main: #4A4A4A; /* สีข้อความเข้ม อ่านง่าย */
-            --p-pink: #FFD1DC;
-            --p-blue: #B2E2F2;
-            --p-green: #C1E1C1;
-            --p-yellow: #FFF9C4;
-            --accent: #FF85A1;
-        }
+        :root { --accent: #FF85A1; --bg: #FFF9FA; --p-green: #D4EFDF; --p-pink: #FADBD8; --p-blue: #D6EAF8; --p-yellow: #FCF3CF; }
+        * { box-sizing: border-box; font-family: 'Kanit', sans-serif; color: #444; }
+        body { background: var(--bg); margin: 0; display: flex; justify-content: center; padding: 15px; }
+        .container { width: 100%; max-width: 414px; background: white; border-radius: 35px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); min-height: 90vh; position: relative; }
+        
+        /* Tab Menu */
+        .tab-menu { display: flex; background: #F0F0F0; border-radius: 20px; margin-bottom: 15px; padding: 5px; gap: 5px; }
+        .tab-btn { flex: 1; border: none; padding: 10px 5px; border-radius: 15px; cursor: pointer; font-weight: 600; background: none; font-size: 11px; transition: 0.3s; }
+        .tab-btn.active { background: white; color: var(--accent); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
 
-        * { box-sizing: border-box; font-family: 'Sarabun', sans-serif; color: var(--text-main); }
+        .page { display: none; animation: fadeIn 0.3s; }
+        .page.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        body { 
-            background-color: var(--bg-pastel);
-            /* เพิ่มความฟุ้งฟิ้งด้วยลวดลาย Background */
-            background-image: url("https://www.transparenttextures.com/patterns/cubes.png"); 
-            display: flex; justify-content: center; padding: 20px; margin: 0;
-            min-height: 100vh;
-            position: relative;
-        }
+        /* Dashboard */
+        .mood-card { background: linear-gradient(135deg, #FFF0F5 0%, #F0F8FF 100%); padding: 25px; border-radius: 30px; text-align: center; position: relative; margin-bottom: 15px; }
+        .big-amt { font-size: 45px; font-weight: 600; color: var(--accent); line-height: 1; margin: 10px 0; }
+        .xp-container { background: #EEE; height: 8px; border-radius: 10px; margin: 10px 0; overflow: hidden; }
+        .xp-bar { height: 100%; background: var(--accent); width: 0%; transition: 0.5s; }
 
-        /* ตกแต่ง Background เพิ่มเติมด้วย Emoji ฟุ้งฟิ้ง */
-        body::before {
-            content: "🐶 🎀 🧺 🌟 💰 🐶 🎀 🧺 🌟";
-            position: fixed; top: 5%; left: 0; right: 0;
-            font-size: 20px; opacity: 0.15; text-align: center; z-index: -1;
-            letter-spacing: 50px; line-height: 100px;
-        }
-
-        .app-container { 
-            width: 100%; max-width: 450px; 
-            background: var(--card-white); 
-            border-radius: 40px; padding: 25px; 
-            box-shadow: 0 15px 35px rgba(255, 133, 161, 0.2);
-            border: 3px solid var(--p-pink);
-            backdrop-filter: blur(5px);
-        }
-
-        /* Header & Level */
-        .header { text-align: center; margin-bottom: 20px; background: white; padding: 15px; border-radius: 30px; border: 2px dashed var(--p-pink); }
-        #mascot { font-size: 60px; display: block; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.1)); }
-        .level-badge { background: var(--accent); color: white; padding: 4px 15px; border-radius: 20px; font-weight: bold; font-size: 14px; }
-        .xp-container { width: 100%; background: #eee; height: 10px; border-radius: 10px; margin-top: 10px; border: 1px solid #ddd; }
-        #xp-bar { width: 0%; height: 100%; background: linear-gradient(90deg, #FFB7C5, #FF85A1); border-radius: 10px; transition: 0.8s; }
+        /* Vault & Items */
+        .vault-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+        .vault-card { padding: 12px; border-radius: 20px; text-align: center; font-size: 12px; }
+        .item-row { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: #F9F9F9; border-radius: 15px; margin-bottom: 8px; font-size: 13px; border-left: 5px solid #DDD; }
 
         /* Calendar */
-        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin: 15px 0; }
-        .cal-date { 
-            aspect-ratio: 1/1.2; border-radius: 15px; background: white; 
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            font-size: 12px; font-weight: bold; border: 1px solid #FFE4E1;
-        }
-        .day-money { font-size: 9px; color: #888; font-weight: normal; }
-        .status-good { background-color: var(--p-green) !important; border-color: #8FBC8F; }
-        .status-warning { background-color: var(--p-yellow) !important; border-color: #E6E6FA; }
-        .status-danger { background-color: var(--p-pink) !important; border-color: #F08080; }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; }
+        .cal-day { aspect-ratio: 1; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 10px; border: 1px solid #F0F0F0; position: relative; }
+        .day-dot { width: 5px; height: 5px; border-radius: 50%; position: absolute; bottom: 3px; }
 
-        .legend { display: flex; justify-content: center; gap: 10px; font-size: 10px; margin-bottom: 20px; font-weight: bold; }
-        .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 4px; }
-
-        /* Dashboard Card */
-        .main-card { 
-            background: linear-gradient(135deg, #FFD1DC 0%, #B2E2F2 100%); 
-            border-radius: 30px; padding: 25px; text-align: center; margin-bottom: 20px;
-            box-shadow: inset 0 0 15px rgba(255,255,255,0.5);
-        }
-        .main-card small { font-weight: bold; color: #555; }
-        .amount { font-size: 50px; font-weight: 800; color: var(--text-main); text-shadow: 1px 1px 0px white; }
-        
-        .stat-box { background: rgba(255,255,255,0.7); padding: 12px; border-radius: 20px; border: 1px solid var(--p-pink); flex: 1; }
-        .stats-row { display: flex; gap: 10px; margin-bottom: 20px; }
-
-        /* Inputs & Buttons */
-        .input-group { display: flex; gap: 8px; margin-bottom: 15px; }
-        input { 
-            flex: 1; padding: 14px; border-radius: 15px; border: 2px solid var(--p-pink); 
-            outline: none; font-size: 14px; background: white;
-        }
-        input:focus { border-color: var(--accent); }
-        .btn-add { background: var(--accent); color: white !important; border: none; padding: 0 20px; border-radius: 15px; cursor: pointer; font-weight: bold; }
-
-        .item-list { list-style: none; padding: 0; }
-        li { 
-            background: white; padding: 15px; border-radius: 20px; margin-bottom: 10px; 
-            display: flex; justify-content: space-between; align-items: center;
-            border: 1px solid #FFE4E1; box-shadow: 0 4px 6px rgba(0,0,0,0.02);
-        }
-        .btn-pay { background: var(--p-green); border: 2px solid #8FBC8F; padding: 8px 15px; border-radius: 12px; font-size: 12px; cursor: pointer; font-weight: bold; }
-        
-        .btn-save-record { 
-            margin-top: 15px; background: white; border: 2px solid var(--accent); 
-            color: var(--accent) !important; padding: 8px 20px; border-radius: 20px; 
-            cursor: pointer; font-weight: bold; font-size: 12px; transition: 0.3s;
-        }
-        .btn-save-record:hover { background: var(--accent); color: white !important; }
+        /* Inputs */
+        .input-box { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+        input, select { width: 100%; padding: 10px; border-radius: 12px; border: 1px solid #EEE; background: #F9F9F9; font-size: 13px; outline: none; }
+        .btn-add { background: var(--accent); color: white; border: none; padding: 12px; border-radius: 15px; width: 100%; font-weight: 600; cursor: pointer; }
     </style>
 </head>
 <body>
 
-<div class="app-container">
-    <div class="header">
-        <button onclick="editIncome()" style="float:right; background:none; border:none; cursor:pointer; font-size:18px;">⚙️</button>
-        <span id="mascot">😊</span>
-        <div class="level-badge">LEVEL <span id="lv-val">1</span></div>
-        <div class="xp-container"><div id="xp-bar"></div></div>
+<div class="container">
+    <div class="tab-menu">
+        <button class="tab-btn active" onclick="switchPage('main', this)">🏠 หลัก</button>
+        <button class="tab-btn" onclick="switchPage('vault', this)">🔐 คลัง</button>
+        <button class="tab-btn" onclick="switchPage('report', this)">🗓️ เดือน</button>
     </div>
 
-    <div id="calendar-grid" class="calendar-grid"></div>
-    <div class="legend">
-        <div class="legend-item"><span class="dot" style="background:var(--p-green)"></span>วินัยดี</div>
-        <div class="legend-item"><span class="dot" style="background:var(--p-yellow)"></span>ตึงๆ</div>
-        <div class="legend-item"><span class="dot" style="background:var(--p-pink)"></span>อันตราย</div>
+    <div id="main-page" class="page active">
+        <div class="mood-card">
+            <div id="mood-emoji" style="font-size: 50px;">🐶🩷</div>
+            <div class="big-amt" id="daily-amt">0</div>
+            <small id="cycle-info">งบกินใช้รายวันวันนี้</small>
+            <div class="xp-container"><div id="xp-bar" class="xp-bar"></div></div>
+            <small>LV. <span id="lv-txt">1</span> | <span id="xp-txt">0</span>/100 XP</small>
+            <button onclick="saveDaily()" style="display:block; width:100%; margin-top:15px; border:none; background:white; padding:8px; border-radius:15px; color:var(--accent); font-weight:600; cursor:pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">🌟 บันทึกสถิติวันนี้</button>
+        </div>
+
+        <div class="vault-grid">
+            <div class="vault-card" style="background:var(--p-blue)">🚨 ฉุกเฉิน: <b id="v-emerg">0</b></div>
+            <div class="vault-card" style="background:var(--p-pink)">👤 คนยืม: <b id="v-lent">0</b></div>
+        </div>
+
+        <div class="input-box">
+            <input type="text" id="in-name" placeholder="ชื่อรายการ">
+            <input type="number" id="in-amt" placeholder="บาท">
+        </div>
+        <div class="input-box">
+            <select id="in-type">
+                <option value="debt">หนี้/ออม (เฉลี่ยหัก)</option>
+                <option value="lent">คนยืมเงิน (ไม่หักงบ)</option>
+            </select>
+            <select id="in-cycle">
+                <option value="now">หักสัปดาห์นี้ทันที</option>
+                <option value="next">รอหักจันทร์หน้า 🚀</option>
+            </select>
+        </div>
+        <button class="btn-add" onclick="addItem()">เพิ่มรายการใหม่</button>
+
+        <p style="font-size:12px; font-weight:600; margin: 15px 0 5px;">📝 รายการที่รอจัดการ</p>
+        <div id="item-list"></div>
     </div>
 
-    <div class="main-card">
-        <small>🧺 เงินใช้ได้จริงวันนี้</small>
-        <div id="daily-available" class="amount">0</div>
-        <button class="btn-save-record" onclick="saveToday()">🌟 บันทึกสถิติวันนี้</button>
+    <div id="vault-page" class="page">
+        <h3>🔐 คลังเงินส่วนตัว</h3>
+        <div style="background:var(--p-blue); padding:20px; border-radius:25px; text-align:center;">
+            <small>เงินสำรองฉุกเฉิน</small>
+            <div class="big-amt" id="v-emerg-set">0</div>
+            <button onclick="updateEmergency()" style="border:none; background:white; padding:5px 15px; border-radius:10px; cursor:pointer;">แก้ไขยอดเงิน</button>
+        </div>
+        <br>
+        <div style="background:#F9F9F9; padding:15px; border-radius:20px; font-size:13px; line-height:1.6;">
+            <b>ระบบคำนวณอัจฉริยะ:</b><br>
+            - <b>หนี้สัปดาห์นี้:</b> เอา (ยอดรวม / 7) มาหักรายวัน<br>
+            - <b>รอหักจันทร์หน้า:</b> ยังไม่หักจนกว่าจะถึงวันจันทร์ใหม่<br>
+            - <b>คนยืม:</b> แยกยอดไว้เฉยๆ ไม่รวมกับงบกินใช้
+        </div>
     </div>
 
-    <div class="stats-row">
-        <div class="stat-box"><small>💰 หนี้ค้าง</small><br><b id="sum-debt">0</b> ฿</div>
-        <div class="stat-box"><small>🎀 ปลายเดือนเหลือ</small><br><b id="monthly-est">0</b> ฿</div>
+    <div id="report-page" class="page">
+        <h3 id="month-label" style="text-align:center;">-</h3>
+        <div class="calendar-grid" id="calendar-box"></div>
+        <div style="margin-top:20px; background:#F9F9F9; padding:20px; border-radius:25px; text-align:center;">
+            <div id="month-grade" style="font-size:40px; font-weight:600; color:var(--accent);">-</div>
+            <small>เกรดวินัยเดือนนี้</small>
+            <hr style="border:0; border-top:1px solid #EEE; margin:15px 0;">
+            <div style="display:flex; justify-content:space-around; font-size:13px;">
+                <div>เฉลี่ยเงินเหลือ<br><b id="avg-remain">0</b></div>
+                <div>วันที่บันทึก<br><b id="count-day">0</b></div>
+            </div>
+        </div>
     </div>
-
-    <div class="input-group">
-        <input type="text" id="desc" placeholder="ชื่อรายการหนี้/ออม">
-        <input type="number" id="amt" placeholder="บาท">
-        <button class="btn-add" onclick="addItem()">เพิ่ม</button>
-    </div>
-
-    <ul id="item-list" class="item-list"></ul>
 </div>
 
 <script>
-    let state = JSON.parse(localStorage.getItem('fin_dream_db')) || {
-        dailyIncome: 300,
-        items: [],
-        history: {},
-        xp: 0,
-        lv: 1
+    let db = JSON.parse(localStorage.getItem('money_buddy_final')) || {
+        base: 300, emergency: 0, items: [], history: {}, xp: 0, lv: 1, lastDate: ""
     };
 
-    function calculate() {
-        const pendingItems = state.items.filter(i => !i.isPaid);
-        const totalPending = pendingItems.reduce((s, i) => s + i.amount, 0);
-        
-        // หนี้รายสัปดาห์หักรายวัน
-        const dailyAvailable = state.dailyIncome - (totalPending / 7);
-        const monthlyEst = (state.dailyIncome * 30) - totalPending;
-
-        document.getElementById('daily-available').innerText = Math.floor(dailyAvailable).toLocaleString();
-        document.getElementById('sum-debt').innerText = totalPending.toLocaleString();
-        document.getElementById('monthly-est').innerText = Math.floor(monthlyEst).toLocaleString();
-        document.getElementById('lv-val').innerText = state.lv;
-        document.getElementById('xp-bar').style.width = state.xp + "%";
-        
-        const m = document.getElementById('mascot');
-        if(dailyAvailable > 150) m.innerText = "🐶"; // เปลี่ยนเป็นน้องหมาตามธีม
-        else if(dailyAvailable > 50) m.innerText = "😐";
-        else m.innerText = "😫";
-
-        render();
+    function switchPage(page, btn) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(page + '-page').classList.add('active');
+        btn.classList.add('active');
+        if(page === 'report') renderMonthly();
     }
 
-    function addXP(val) {
-        state.xp += val;
-        if(state.xp >= 100) {
-            state.lv += 1; state.xp = 0;
-            alert("🎊 เย้! เลเวลอัพเป็น Level " + state.lv + " แล้วเก่งมาก!");
+    function init() {
+        const today = new Date();
+        const dayOfWeek = today.getDay(); // 0=Sun, 1=Mon
+        
+        let activeDebt = 0;
+        let lentTotal = 0;
+
+        db.items.forEach(item => {
+            if(!item.done) {
+                if(item.type === 'debt') {
+                    // เช็คว่าเริ่มหักได้หรือยัง (ถ้าเลือก next ต้องรอวันจันทร์)
+                    if(item.cycle === 'next' && dayOfWeek !== 1) {
+                        // ยังอยู่ในสถานะจอง
+                    } else {
+                        activeDebt += item.amt;
+                        if(dayOfWeek === 1) item.cycle = 'now'; // ปรับเป็นปัจจุบันอัตโนมัติเมื่อถึงวันจันทร์
+                    }
+                } else if(item.type === 'lent') {
+                    lentTotal += item.amt;
+                }
+            }
+        });
+
+        const daily = db.base - (activeDebt / 7);
+        
+        document.getElementById('daily-amt').innerText = Math.floor(daily).toLocaleString();
+        document.getElementById('v-emerg').innerText = db.emergency.toLocaleString();
+        document.getElementById('v-emerg-set').innerText = db.emergency.toLocaleString();
+        document.getElementById('v-lent').innerText = lentTotal.toLocaleString();
+        document.getElementById('lv-txt').innerText = db.lv;
+        document.getElementById('xp-txt').innerText = db.xp;
+        document.getElementById('xp-bar').style.width = db.xp + "%";
+
+        // ระบบ Mood Emoji ตามสั่ง
+        const mood = document.getElementById('mood-emoji');
+        if(daily > 200) {
+            mood.innerText = "🐶🩷"; // ดีเยี่ยม
+        } else if(daily > 50) {
+            mood.innerText = "🐶🤌🏻"; // พอใช้
+        } else {
+            mood.innerText = "🐶😭"; // ค่อนข้างหนัก
         }
-        save();
+
+        renderItems();
     }
 
     function addItem() {
-        const desc = document.getElementById('desc').value;
-        const amount = parseFloat(document.getElementById('amt').value);
-        if(desc && amount) {
-            state.items.push({ id: Date.now(), desc, amount, isPaid: false });
+        const name = document.getElementById('in-name').value;
+        const amt = parseFloat(document.getElementById('in-amt').value);
+        const type = document.getElementById('in-type').value;
+        const cycle = document.getElementById('in-cycle').value;
+
+        if(name && amt) {
+            db.items.push({ id: Date.now(), name, amt, type, cycle, done: false });
             save();
+            document.getElementById('in-name').value = "";
+            document.getElementById('in-amt').value = "";
         }
     }
 
-    function markAsPaid(id) {
-        const item = state.items.find(i => i.id === id);
-        if(item) {
-            item.isPaid = true;
-            addXP(30); 
+    function renderItems() {
+        const list = document.getElementById('item-list');
+        list.innerHTML = "";
+        db.items.filter(i => !i.done).forEach(item => {
+            const isLent = item.type === 'lent';
+            const isNext = item.cycle === 'next';
+            list.innerHTML += `
+                <div class="item-row" style="border-left-color: ${isLent ? '#AED6F1' : (isNext ? '#F9E79F' : '#FADBD8')}">
+                    <div>
+                        <b>${item.name}</b> ${isNext ? '🚀':''}<br>
+                        <small>${item.amt.toLocaleString()}.- (${isLent ? 'คนยืม' : (isNext ? 'เริ่มจันทร์หน้า' : 'หักรายวัน')})</small>
+                    </div>
+                    <button onclick="markDone(${item.id})" style="border:none; background:${isLent ? '#D6EAF8':'#FADBD8'}; padding:5px 10px; border-radius:10px; cursor:pointer; font-size:11px;">
+                        ${isLent ? 'คืนแล้ว':'จ่ายแล้ว'}
+                    </button>
+                </div>
+            `;
+        });
+    }
+
+    function markDone(id) {
+        const item = db.items.find(i => i.id === id);
+        if(item) item.done = true;
+        save();
+    }
+
+    function saveDaily() {
+        const dateStr = new Date().toISOString().split('T')[0];
+        const currentDaily = parseInt(document.getElementById('daily-amt').innerText.replace(',',''));
+        if(db.lastDate === dateStr) return alert("วันนี้จดไปแล้วนะโฮ่ง!");
+        
+        db.history[dateStr] = currentDaily;
+        db.lastDate = dateStr;
+        db.xp += 20;
+        if(db.xp >= 100) { db.lv++; db.xp = 0; alert("Level Up! 🐶🎉 เก่งมากเจ้าของ!"); }
+        save();
+        alert("บันทึกวินัยเรียบร้อย!");
+    }
+
+    function updateEmergency() {
+        const val = prompt("แก้ไขเงินสำรองฉุกเฉิน:", db.emergency);
+        if(val !== null) { db.emergency = parseFloat(val) || 0; save(); }
+    }
+
+    function renderMonthly() {
+        const box = document.getElementById('calendar-box');
+        box.innerHTML = "";
+        const now = new Date();
+        document.getElementById('month-label').innerText = new Intl.DateTimeFormat('th-TH', {month:'long', year:'numeric'}).format(now);
+        
+        const lastDate = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+        let total = 0, count = 0;
+
+        for(let i=1; i<=lastDate; i++) {
+            const dStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
+            const val = db.history[dStr];
+            let color = "";
+            if(val) { total += val; count++; color = val > 200 ? "#FF85A1" : (val > 50 ? "#F4D03F" : "#E74C3C"); }
+            box.innerHTML += `<div class="cal-day">${i}${val ? `<div class="day-dot" style="background:${color}"></div>` : ''}</div>`;
         }
-    }
 
-    function saveToday() {
-        const today = new Date().toISOString().split('T')[0];
-        const current = parseInt(document.getElementById('daily-available').innerText);
-        state.history[today] = current;
-        addXP(15);
-        alert("🌟 บันทึกเรียบร้อย! รับ 15 XP");
-    }
-
-    function editIncome() {
-        const val = prompt("งบรายรับต่อวันพื้นฐาน:", state.dailyIncome);
-        if(val) { state.dailyIncome = parseFloat(val); save(); }
+        const avg = count > 0 ? total/count : 0;
+        document.getElementById('avg-remain').innerText = Math.floor(avg).toLocaleString();
+        document.getElementById('count-day').innerText = count;
+        
+        const grade = document.getElementById('month-grade');
+        if(count === 0) grade.innerText = "-";
+        else if(avg > 200) grade.innerText = "A";
+        else if(avg > 150) grade.innerText = "B";
+        else if(avg > 100) grade.innerText = "C";
+        else if(avg > 50) grade.innerText = "D";
+        else grade.innerText = "F";
     }
 
     function save() {
-        localStorage.setItem('fin_dream_db', JSON.stringify(state));
-        calculate();
+        localStorage.setItem('money_buddy_final', JSON.stringify(db));
+        init();
     }
 
-    function render() {
-        const grid = document.getElementById('calendar-grid');
-        grid.innerHTML = "";
-        const now = new Date();
-        for(let i=0; i<7; i++) {
-            const d = new Date(); d.setDate(now.getDate() - (6-i));
-            const key = d.toISOString().split('T')[0];
-            const val = state.history[key];
-            let status = "";
-            if(val !== undefined) {
-                if(val > 150) status = "status-good";
-                else if(val > 50) status = "status-warning";
-                else status = "status-danger";
-            }
-            grid.innerHTML += `<div class="cal-date ${status}">${d.getDate()}<span class="day-money">${val || '-'}</span></div>`;
-        }
-
-        const list = document.getElementById('item-list');
-        list.innerHTML = "";
-        state.items.filter(i => !i.isPaid).forEach(i => {
-            list.innerHTML += `<li>
-                <span>${i.desc} (<b>${i.amount.toLocaleString()}</b>)</span>
-                <button class="btn-pay" onclick="markAsPaid(${i.id})">จ่ายแล้ว 🎀</button>
-            </li>`;
-        });
-        document.getElementById('desc').value = "";
-        document.getElementById('amt').value = "";
-    }
-
-    calculate();
+    init();
 </script>
 </body>
 </html>
