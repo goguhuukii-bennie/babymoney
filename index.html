@@ -3,277 +3,257 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Money Buddy: Daily Tracker V13 🐶💰</title>
+    <title>Money Buddy: V30 🌸🛡️</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        :root { --accent: #FF85A1; --bg: #FFF9FA; --spend-color: #FFA502; }
-        * { box-sizing: border-box; font-family: 'Kanit', sans-serif; color: #444; }
+        :root { --accent: #FFB7C5; --bg: #FFF9FA; --spend-color: #FFD1A1; --debt-color: #FF9AA2; --lent-color: #B3E5FC; --vault-color: #C5E1A5; --xp-color: #DCEDC8; --text: #444; }
+        * { box-sizing: border-box; font-family: 'Kanit', sans-serif; color: var(--text); }
         body { background: var(--bg); margin: 0; display: flex; justify-content: center; padding: 15px; }
-        .container { width: 100%; max-width: 414px; background: white; border-radius: 35px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); min-height: 90vh; }
+        .container { width: 100%; max-width: 414px; background: white; border-radius: 35px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.03); min-height: 90vh; }
         
-        .tab-menu { display: flex; background: #F0F0F0; border-radius: 20px; margin-bottom: 15px; padding: 5px; gap: 5px; }
+        .tab-menu { display: flex; background: #FDF2F4; border-radius: 20px; margin-bottom: 15px; padding: 5px; gap: 5px; }
         .tab-btn { flex: 1; border: none; padding: 10px 5px; border-radius: 15px; cursor: pointer; font-weight: 600; background: none; font-size: 11px; }
-        .tab-btn.active { background: white; color: var(--accent); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .tab-btn.active { background: white; color: #FF85A1; box-shadow: 0 4px 10px rgba(255,183,197,0.3); }
 
         .page { display: none; }
         .page.active { display: block; }
 
-        .mood-card { background: linear-gradient(135deg, #FFF0F5 0%, #F0F8FF 100%); padding: 25px; border-radius: 30px; text-align: center; position: relative; margin-bottom: 15px; border: 2px solid #FFF; }
-        .edit-gear { position: absolute; top: 15px; right: 15px; background: white; padding: 5px 10px; border-radius: 15px; cursor: pointer; border: 1px solid #FFD1DC; font-size: 11px; }
-        .big-amt { font-size: 45px; font-weight: 600; color: var(--accent); line-height: 1; margin: 5px 0; }
-        
-        /* สรุปยอดเงิน */
-        .summary-box { display: flex; justify-content: space-around; margin-top: 10px; padding-top: 10px; border-top: 1px dashed #FFD1DC; }
-        .summary-item { font-size: 11px; }
-        .summary-item b { display: block; font-size: 14px; color: #555; }
+        .section-header { font-size: 14px; font-weight: 600; color: #888; margin: 5px 0 8px 10px; display: flex; align-items: center; gap: 6px; }
 
-        .btn-exp { background: white; border: 1px solid #FFD1DC; padding: 10px; border-radius: 15px; width: 100%; color: var(--accent); font-weight: 600; cursor: pointer; margin: 10px 0; }
-        .btn-exp:disabled { background: #F5F5F5; color: #CCC; border-color: #EEE; }
+        .mood-card { background: linear-gradient(135deg, #FFF5F7 0%, #F0FBFF 100%); padding: 20px; border-radius: 30px; text-align: center; position: relative; margin-bottom: 15px; border: 2px solid #FFF; }
+        .big-amt { font-size: 42px; font-weight: 600; color: #FF85A1; line-height: 1; margin: 10px 0; }
+        .setting-btn { position: absolute; top: 15px; right: 15px; font-size: 14px; cursor: pointer; background: white; padding: 5px; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border: 1px solid #FFE4E8; }
+        .level-badge { background: #FFC1CC; color: white; padding: 2px 10px; border-radius: 10px; font-size: 11px; font-weight: 600; }
+        .xp-bar-container { background: #F0F0F0; height: 6px; border-radius: 3px; width: 60%; margin: 8px auto; overflow: hidden; }
+        .xp-bar-fill { background: #B2E2A2; height: 100%; width: 0%; transition: 0.5s; }
 
-        /* Input Sections */
-        .section-title { font-size: 14px; font-weight: 600; margin: 15px 0 8px 5px; display: flex; align-items: center; }
-        .input-group { background: #F9F9F9; padding: 12px; border-radius: 20px; margin-bottom: 15px; }
-        .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
-        input, select { width: 100%; padding: 10px; border-radius: 12px; border: 1px solid #EEE; background: white; font-size: 13px; outline: none; }
-        
-        .btn-add { background: var(--accent); color: white; border: none; padding: 10px; border-radius: 12px; width: 100%; font-weight: 600; cursor: pointer; }
-        .btn-spend { background: var(--spend-color); color: white; border: none; padding: 10px; border-radius: 12px; width: 100%; font-weight: 600; cursor: pointer; }
+        .input-group { background: #FCF8F9; padding: 15px; border-radius: 20px; margin-bottom: 20px; border-top: 4px solid #EEE; }
+        input, select { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #F0E0E5; font-size: 13px; margin-bottom: 8px; outline: none; background: white; }
+        .btn-main { background: #FFC1CC; color: white; border: none; padding: 12px; border-radius: 12px; width: 100%; font-weight: 600; cursor: pointer; }
 
-        /* List Styling */
-        .item-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; background: #F9F9F9; border-radius: 15px; margin-bottom: 8px; font-size: 13px; border-left: 5px solid #DDD; }
-        .created-date { font-size: 10px; color: #999; display: block; }
+        /* Report Styles - Back in V30 */
+        .recap-card { background: #E1F5FE; padding: 20px; border-radius: 25px; margin-bottom: 15px; border: 2px solid white; }
+        .recap-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+        .recap-item { background: rgba(255,255,255,0.7); padding: 12px; border-radius: 15px; font-size: 11px; }
+        .recap-item b { color: #333; display: block; font-size: 15px; margin-top: 4px; }
+
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-top: 10px; }
+        .cal-day { aspect-ratio: 1; background: white; border-radius: 12px; font-size: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; border: 1px solid #F9F0F2; position: relative; }
+        .cal-day.confirmed { background: #E8F5E9; border-color: #C8E6C9; }
+        .dot { width: 6px; height: 6px; background: #FF85A1; border-radius: 50%; position: absolute; bottom: 4px; }
+
+        .item-row { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: #FDFBFC; border-radius: 15px; margin-bottom: 8px; font-size: 13px; border-left: 6px solid #DDD; }
         
-        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; margin-top: 15px; }
-        .cal-day { aspect-ratio: 1; background: #F0F0F0; border-radius: 8px; font-size: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-        .cal-day.has-data { background: var(--accent); color: white; font-weight: 600; }
+        #modal { display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:white; width:88%; padding:25px; border-radius:25px; box-shadow:0 20px 60px rgba(0,0,0,0.15); z-index:1000; border: 3px solid #FFC1CC; }
+        #modal-title { font-weight:600; color:#FF85A1; font-size:18px; margin-bottom:15px; border-bottom:2px solid #FFF0F3; padding-bottom:10px; }
+        #overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.3); backdrop-filter: blur(3px); z-index:999; }
     </style>
 </head>
 <body>
 
-<div id="history-modal" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:white; width:85%; padding:20px; border-radius:25px; box-shadow:0 20px 50px rgba(0,0,0,0.3); z-index:1000; border:2px solid var(--accent);">
-    <p id="modal-date" style="font-weight:600; border-bottom:1px solid #EEE; padding-bottom:10px;"></p>
-    <div id="modal-content" style="max-height:250px; overflow-y:auto;"></div>
-    <button onclick="closeModal()" style="width:100%; border:none; background:var(--accent); color:white; padding:10px; border-radius:12px; margin-top:15px; font-weight:600;">ปิด</button>
+<div id="overlay" onclick="closeModal()"></div>
+<div id="modal">
+    <p id="modal-title"></p>
+    <div id="modal-body"></div>
+    <button class="btn-main" onclick="closeModal()" style="margin-top:20px; background:#FF85A1;">ปิดหน้าต่าง</button>
 </div>
-<div id="overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); z-index:999;" onclick="closeModal()"></div>
 
 <div class="container">
     <div class="tab-menu">
-        <button class="tab-btn active" onclick="switchPage('main', this)">🏠 หน้าหลัก</button>
+        <button class="tab-btn active" onclick="switchPage('main', this)">🌸 หน้าหลัก</button>
         <button class="tab-btn" onclick="switchPage('vault', this)">🔐 คลัง</button>
-        <button class="tab-btn" onclick="switchPage('report', this)">🗓️ ปฏิทิน</button>
+        <button class="tab-btn" onclick="switchPage('report', this)">📊 รายงาน</button>
     </div>
 
     <div id="main-page" class="page active">
         <div class="mood-card">
-            <div class="edit-gear" onclick="updateBase()">⚙️ แก้ไขงบ</div>
-            <span id="mood-emoji" class="mood-emoji">😊</span>
+            <div class="setting-btn" onclick="updateBase()">⚙️</div>
+            <span class="level-badge">LV. <span id="lv-display">1</span></span>
+            <div class="xp-bar-container"><div class="xp-bar-fill" id="xp-fill"></div></div>
+            <span id="mood-emoji" style="font-size: 45px; display: block; margin: 10px 0;">😊</span>
             <div class="big-amt" id="remaining-today">0</div>
-            <small>เหลือเงินใช้ได้จริงตอนนี้</small>
-
-            <div class="summary-box">
-                <div class="summary-item">งบวันนี้<b id="daily-limit">0</b></div>
-                <div class="summary-item">ใช้ไปแล้ว<b id="total-spent-today" style="color:var(--spend-color)">0</b></div>
-            </div>
-
-            <button class="btn-exp" id="btn-xp" onclick="gainXP()">🌟 รับพลัง XP ประจำวัน (+20)</button>
+            <small>งบกินเหลือวันนี้</small>
+            <button id="daily-confirm-btn" class="btn-main" style="width:auto; padding: 6px 20px; font-size:11px; margin-top:12px; background:#A5D6A7;" onclick="confirmDailyStat()">
+                ✅ ยืนยันจบวัน (+30 XP)
+            </button>
         </div>
 
-        <div class="section-title">🛒 วันนี้ซื้ออะไรไป?</div>
-        <div class="input-group" style="border-top: 4px solid var(--spend-color);">
-            <div class="input-grid">
-                <input type="text" id="sp-name" placeholder="เช่น ข้าวเที่ยง">
-                <input type="number" id="sp-amt" placeholder="กี่บาท">
+        <div class="section-header">📝 บันทึกค่าใช้จ่ายรายวัน</div>
+        <div class="input-group" style="border-top-color: var(--spend-color);">
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+                <input type="text" id="sp-name" placeholder="กินอะไร...">
+                <input type="number" id="sp-amt" placeholder="บาท">
             </div>
-            <button class="btn-spend" onclick="addSpend()">บันทึกการใช้จ่าย</button>
+            <button class="btn-main" style="background:var(--spend-color)" onclick="addSpend()">บันทึกรายการกิน</button>
         </div>
 
-        <div class="section-title">📝 เพิ่มหนี้/ออม (รายสัปดาห์)</div>
-        <div class="input-group" style="border-top: 4px solid var(--accent);">
-            <div class="input-grid">
+        <div class="section-header">📅 แผนรายสัปดาห์ (หนี้/ออม/ยืม)</div>
+        <div class="input-group" style="border-top-color: var(--accent);">
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
                 <input type="text" id="in-name" placeholder="ชื่อรายการ">
-                <input type="number" id="in-amt" placeholder="จำนวนเงิน">
+                <input type="number" id="in-amt" placeholder="ยอดเงิน">
             </div>
-            <div class="input-grid">
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
                 <select id="in-type">
-                    <option value="debt">หนี้/ออม (หักงบ)</option>
-                    <option value="lent">คนยืมเงิน</option>
+                    <option value="debt">หนี้/ออม (หักกิน)</option>
+                    <option value="lent">คนยืมเงิน (ไม่หัก)</option>
                 </select>
                 <select id="in-cycle">
-                    <option value="now">หักวันนี้</option>
-                    <option value="next">หักจันทร์หน้า</option>
+                    <option value="now">สัปดาห์นี้</option>
+                    <option value="next">สัปดาห์หน้า 🗓️</option>
                 </select>
             </div>
-            <button class="btn-add" onclick="addItem()">บันทึกหนี้/ออม</button>
+            <button class="btn-main" onclick="addItem()">เพิ่มแผนล่วงหน้า</button>
         </div>
-
-        <h4 style="margin: 20px 0 10px 5px;">รายการวันนี้ & หนี้ที่ค้างอยู่:</h4>
         <div id="item-list"></div>
     </div>
 
     <div id="vault-page" class="page">
-        <h3>🔐 คลังเงินสำรอง</h3>
-        <div style="background:#D6EAF8; padding:30px; border-radius:30px; text-align:center;">
-            <div class="big-amt" id="v-emerg-set" style="color:#5dade2">0</div>
-            <p>เงินฉุกเฉินสะสม</p>
-            <button onclick="updateEmerg()" style="border:none; background:white; padding:8px 15px; border-radius:12px; font-weight:600; cursor:pointer;">แก้ไข</button>
+        <h3 style="text-align:center; color:#81D4FA;">🔐 คลังเงินสำรอง</h3>
+        <div class="mood-card" style="background:#F1F8E9;">
+            <div class="big-amt" id="vault-total" style="color:#7CB342">0</div>
+            <small>เงินเก็บทั้งหมด</small>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-top:20px;">
+                <button class="btn-main" style="background:#AED581" onclick="vaultAction('ฝาก')">➕ ฝาก</button>
+                <button class="btn-main" style="background:#FFAB91" onclick="vaultAction('ถอน')">➖ ถอน</button>
+            </div>
         </div>
     </div>
 
     <div id="report-page" class="page">
-        <h3 style="text-align:center;">🗓️ ประวัติรายวัน</h3>
+        <!-- สรุปยอดที่หายไป ดึงกลับมาแล้ว -->
+        <div class="recap-card">
+            <small>🌸 สรุปยอดเดือนนี้</small>
+            <div class="recap-grid">
+                <div class="recap-item">กินรวม<b id="recap-spent">0</b></div>
+                <div class="recap-item">จ่ายหนี้<b id="recap-plan">0</b></div>
+                <div class="recap-item">งบ 30 วัน<b id="recap-budget">0</b></div>
+                <div class="recap-item">คงเหลือ<b id="recap-balance">0</b></div>
+            </div>
+        </div>
+        <h4 style="margin:15px 0 10px 5px;">📍 ปฏิทินบันทึก</h4>
         <div class="calendar-grid" id="calendar-grid"></div>
     </div>
 </div>
 
 <script>
-    let db = JSON.parse(localStorage.getItem('money_buddy_v13')) || {
-        base: 300, emergency: 0, items: [], xp: 0, lv: 1, history: {}, lastXPDate: "", dailySpends: {} 
+    let db = JSON.parse(localStorage.getItem('money_buddy_v28')) || {
+        base: 300, emergency: 0, items: [], history: {}, dailySpends: {}, xp: 0, lv: 1, lastCheckIn: ""
     };
 
-    function save() { localStorage.setItem('money_buddy_v13', JSON.stringify(db)); init(); }
+    function save() { localStorage.setItem('money_buddy_v28', JSON.stringify(db)); init(); }
 
     function init() {
         const today = new Date().toISOString().split('T')[0];
-        const dayNum = new Date().getDay();
-        
-        // 1. คำนวณงบรายวัน (หักจากหนี้สัปดาห์)
         let activeDebt = 0;
-        db.items.forEach(i => {
-            if(i.type === 'debt' && (i.cycle === 'now' || (i.cycle === 'next' && dayNum === 1))) activeDebt += i.amt;
-        });
+        db.items.forEach(i => { if(i.type === 'debt' && i.cycle === 'now') activeDebt += i.amt; });
         const dailyLimit = Math.floor(db.base - (activeDebt / 7));
-        
-        // 2. คำนวณยอดใช้จ่ายของวันนี้
         const spentToday = (db.dailySpends[today] || []).reduce((sum, item) => sum + item.amt, 0);
         const remaining = dailyLimit - spentToday;
-
-        document.getElementById('daily-limit').innerText = dailyLimit.toLocaleString();
-        document.getElementById('total-spent-today').innerText = spentToday.toLocaleString();
+        document.getElementById('lv-display').innerText = db.lv;
+        document.getElementById('xp-fill').style.width = db.xp + "%";
         document.getElementById('remaining-today').innerText = Math.max(0, remaining).toLocaleString();
-        
-        // UI อื่นๆ
+        document.getElementById('vault-total').innerText = db.emergency.toLocaleString();
         const ratio = remaining / dailyLimit;
-        document.getElementById('mood-emoji').innerText = ratio >= 0.7 ? "😎" : ratio >= 0.4 ? "😊" : ratio >= 0.1 ? "😟" : "😱";
-        document.getElementById('v-emerg-set').innerText = db.emergency.toLocaleString();
-        
-        // XP Button
-        const btnXp = document.getElementById('btn-xp');
-        btnXp.disabled = db.lastXPDate === today;
-        btnXp.innerText = btnXp.disabled ? "✅ วันนี้รับไปแล้ว" : "🌟 รับพลัง XP ประจำวัน (+20)";
-
-        renderItems();
-        renderCalendar();
+        const emo = document.getElementById('mood-emoji');
+        emo.innerText = ratio >= 0.75 ? "😎" : ratio >= 0.4 ? "😊" : ratio >= 0.1 ? "😟" : "😱";
+        const btn = document.getElementById('daily-confirm-btn');
+        btn.disabled = (db.lastCheckIn === today);
+        btn.innerText = (db.lastCheckIn === today) ? "บันทึกแล้ว ✨" : "✅ ยืนยันจบวัน (+30 XP)";
+        renderList(); renderCalendar(); calculateMonthlyRecap();
     }
 
-    // เพิ่มหนี้/ออม (หักเงินรายสัปดาห์)
-    function addItem() {
-        const name = document.getElementById('in-name').value;
-        const amt = parseFloat(document.getElementById('in-amt').value);
-        const type = document.getElementById('in-type').value;
-        const cycle = document.getElementById('in-cycle').value;
-        const iso = new Date().toISOString().split('T')[0];
-        const displayDate = new Date().toLocaleDateString('th-TH', {day:'numeric', month:'short'});
+    function addSpend() {
+        const n = document.getElementById('sp-name').value, a = parseFloat(document.getElementById('sp-amt').value);
+        if(n && a) {
+            const t = new Date().toISOString().split('T')[0];
+            if(!db.dailySpends[t]) db.dailySpends[t] = [];
+            db.dailySpends[t].push({ id: Date.now(), name: n, amt: a });
+            logHistory(t, n, a, 'spend'); save();
+            document.getElementById('sp-name').value = ""; document.getElementById('sp-amt').value = "";
+        }
+    }
 
-        if(name && amt) {
-            const newItem = { id: Date.now(), name, amt, type, cycle, created: displayDate };
-            db.items.push(newItem);
-            if(!db.history[iso]) db.history[iso] = [];
-            db.history[iso].push(newItem);
+    function addItem() {
+        const n = document.getElementById('in-name').value, a = parseFloat(document.getElementById('in-amt').value), t = document.getElementById('in-type').value, c = document.getElementById('in-cycle').value;
+        if(n && a) {
+            logHistory(new Date().toISOString().split('T')[0], `(แผน) ${n}`, a, t);
+            db.items.push({ id: Date.now(), name: n, amt: a, type: t, cycle: c });
             save();
             document.getElementById('in-name').value = ""; document.getElementById('in-amt').value = "";
         }
     }
 
-    // เพิ่มการใช้จ่ายวันนี้ (หักงบวันต่อวัน)
-    function addSpend() {
-        const name = document.getElementById('sp-name').value;
-        const amt = parseFloat(document.getElementById('sp-amt').value);
-        const today = new Date().toISOString().split('T')[0];
+    function confirmItem(id, amt, name) {
+        db.items = db.items.filter(i => i.id !== id);
+        logHistory(new Date().toISOString().split('T')[0], "💰 จ่าย: "+name, amt, 'plan_paid');
+        db.xp += 15; if(db.xp >= 100) { db.lv += 1; db.xp = 0; } save();
+    }
 
-        if(name && amt) {
-            if(!db.dailySpends[today]) db.dailySpends[today] = [];
-            const newSpend = { id: Date.now(), name, amt, type: 'spend' };
-            db.dailySpends[today].push(newSpend);
-            
-            // ใส่ประวัติในปฏิทินด้วย
-            if(!db.history[today]) db.history[today] = [];
-            db.history[today].push(newSpend);
+    function vaultAction(op) {
+        const a = parseFloat(prompt(`${op}เงินเท่าไหร่?`));
+        if(a > 0) { db.emergency += (op === 'ฝาก' ? a : -a); logHistory(new Date().toISOString().split('T')[0], op+"คลัง", a, 'vault'); save(); }
+    }
 
-            save();
-            document.getElementById('sp-name').value = ""; document.getElementById('sp-amt').value = "";
+    function confirmDailyStat() {
+        const t = new Date().toISOString().split('T')[0];
+        if (db.lastCheckIn === t) return;
+        db.lastCheckIn = t; logHistory(t, "⭐ ปิดยอด", 0, 'confirmed');
+        db.xp += 30; if(db.xp >= 100) { db.lv += 1; db.xp = 0; } save();
+    }
+
+    function logHistory(d, n, a, t) { if(!db.history[d]) db.history[d] = []; db.history[d].push({ name: n, amt: a, type: t }); }
+
+    function calculateMonthlyRecap() {
+        const m = new Date().toISOString().slice(0, 7); let s = 0, p = 0;
+        Object.keys(db.history).forEach(d => { if(d.startsWith(m)) db.history[d].forEach(h => { if(h.type==='spend') s+=h.amt; if(h.type==='plan_paid') p+=h.amt; })});
+        if(document.getElementById('recap-spent')) {
+            document.getElementById('recap-spent').innerText = s.toLocaleString();
+            document.getElementById('recap-plan').innerText = p.toLocaleString();
+            document.getElementById('recap-budget').innerText = (db.base * 30).toLocaleString();
+            document.getElementById('recap-balance').innerText = ((db.base * 30) - s - p).toLocaleString();
         }
     }
 
-    function renderItems() {
-        const list = document.getElementById('item-list'); 
-        list.innerHTML = "";
+    function renderList() {
+        const list = document.getElementById('item-list'); list.innerHTML = "";
         const today = new Date().toISOString().split('T')[0];
-
-        // โชว์ที่จ่ายวันนี้ก่อน
         (db.dailySpends[today] || []).forEach(s => {
-            list.innerHTML += `
-                <div class="item-row" style="border-left-color: var(--spend-color); background: #FFFBF0;">
-                    <div><b>${s.name}</b> <small style="color:var(--spend-color)">-${s.amt}.-</small><span class="created-date">🛒 ซื้อวันนี้</span></div>
-                    <button onclick="removeSpend(${s.id})" style="border:none; background:none; cursor:pointer;">❌</button>
-                </div>`;
+            list.innerHTML += `<div class="item-row" style="border-left-color: var(--spend-color);"><span>🍴 ${s.name} (<b>${s.amt}</b>)</span><button onclick="deleteSpend(${s.id})" style="border:none; background:none;">❌</button></div>`;
         });
-
-        // โชว์หนี้/ออม ค้างจ่าย
         db.items.forEach(i => {
-            list.innerHTML += `
-                <div class="item-row" style="border-left-color: ${i.type==='debt'?'#E74C3C':'#3498DB'}">
-                    <div><b>${i.name}</b> <small>${i.amt}.-</small><span class="created-date">📌 เพิ่มเมื่อ: ${i.created}</span></div>
-                    <button onclick="removeItem(${i.id})" style="border:none; background:none; cursor:pointer;">จ่ายแล้ว</button>
-                </div>`;
+            const color = i.type === 'debt' ? 'var(--debt-color)' : 'var(--lent-color)';
+            list.innerHTML += `<div class="item-row" style="border-left-color: ${color};"><span><b>${i.name}</b> (${i.amt}) ${i.cycle==='next'?'<small>[หน้า]</small>':''}</span><button onclick="confirmItem(${i.id}, ${i.amt}, '${i.name}')" style="color:#81C784; border:none; background:none;">✅</button></div>`;
         });
     }
 
-    function removeSpend(id) {
-        const today = new Date().toISOString().split('T')[0];
-        db.dailySpends[today] = db.dailySpends[today].filter(s => s.id !== id);
-        save();
-    }
+    function deleteSpend(id) { const t = new Date().toISOString().split('T')[0]; db.dailySpends[t] = db.dailySpends[t].filter(s => s.id !== id); save(); }
 
-    function removeItem(id) { db.items = db.items.filter(i => i.id !== id); save(); }
-
-    function gainXP() {
-        const today = new Date().toISOString().split('T')[0];
-        db.xp += 20; db.lastXPDate = today;
-        if(db.xp >= 100) { db.lv += 1; db.xp = 0; alert("Level Up! 🎉"); }
-        save();
-    }
-
-    function updateBase() { const v = prompt("งบฐานรายวัน (ปกติ 300):", db.base); if(v) { db.base = parseFloat(v); save(); } }
-    function updateEmerg() { const v = prompt("เงินสำรองในคลัง:", db.emergency); if(v) { db.emergency = parseFloat(v); save(); } }
-    
     function renderCalendar() {
         const grid = document.getElementById('calendar-grid'); grid.innerHTML = "";
-        const now = new Date();
-        const days = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+        const now = new Date(), days = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
         for (let i = 1; i <= days; i++) {
             const iso = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
-            const has = db.history[iso] && db.history[iso].length > 0;
-            grid.innerHTML += `<div class="cal-day ${has?'has-data':''}" onclick="showDay('${iso}')">${i}</div>`;
+            const history = db.history[iso] || [];
+            const isConfirmed = history.some(h => h.type === 'confirmed');
+            grid.innerHTML += `<div class="cal-day ${isConfirmed?'confirmed':''}" onclick="showDay('${iso}')">${i}${history.length?'<div class="dot"></div>':''}</div>`;
         }
     }
 
-    function showDay(date) {
-        const items = db.history[date]; if(!items) return;
-        document.getElementById('modal-date').innerText = "รายการวันที่ " + date;
-        document.getElementById('modal-content').innerHTML = items.map(i => `<div>• ${i.name} (${i.amt}.-) ${i.type==='spend'?'🛒':''}</div>`).join('');
-        document.getElementById('history-modal').style.display = 'block';
-        document.getElementById('overlay').style.display = 'block';
+    function showDay(d) {
+        const data = db.history[d]; if(!data) return;
+        document.getElementById('modal-title').innerText = "รายการวันที่ " + d;
+        document.getElementById('modal-body').innerHTML = data.map(i => `<div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #F0F0F0; font-size:14px; color:#222;"><span>${i.name}</span><b>${i.amt||''}</b></div>`).join('');
+        document.getElementById('overlay').style.display = 'block'; document.getElementById('modal').style.display = 'block';
     }
 
-    function closeModal() { document.getElementById('history-modal').style.display='none'; document.getElementById('overlay').style.display='none'; }
+    function updateBase() { const v = prompt("งบกินรายวัน:", db.base); if(v) { db.base = parseFloat(v); save(); } }
+    function closeModal() { document.getElementById('overlay').style.display='none'; document.getElementById('modal').style.display='none'; }
     function switchPage(p, btn) {
         document.querySelectorAll('.page').forEach(pg => pg.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(p + '-page').classList.add('active');
-        btn.classList.add('active');
+        document.getElementById(p + '-page').classList.add('active'); btn.classList.add('active');
     }
-
     init();
 </script>
 </body>
